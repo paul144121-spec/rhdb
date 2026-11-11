@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\NexusOptimizer.Core\NexusOptimizer.Core.csproj" />
+    <ProjectReference Include="..\..\src\NexusOptimizer.Data\NexusOptimizer.Data.csproj" />
+    <ProjectReference Include="..\..\src\NexusOptimizer.AI\NexusOptimizer.AI.csproj" />
+  </ItemGroup>
+</Project>
