@@ -68,7 +68,7 @@ public sealed record AppSettings
     public AiMode AiMode { get; init; } = AiMode.Recommendation;
     public string OllamaEndpoint { get; init; } = "http://localhost:11434";
     public string OllamaModel { get; init; } = "";
-    public string AnthropicModel { get; init; } = "claude-sonnet-5-5";
+    public string AnthropicModel { get; init; } = "claude-opus-5-5";
     public string OpenAiEndpoint { get; init; } = "";
     public string OpenAiModel { get; init; } = "";
     /// <summary>Ausdrückliche Zustimmung, Systemkontext an einen Cloud-Dienst zu senden.</summary>

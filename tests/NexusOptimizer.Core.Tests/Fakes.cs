@@ -219,3 +219,25 @@ internal sealed class TempDirectory : IDisposable
         try { Directory.Delete(Path, recursive: true); } catch (IOException) { } catch (UnauthorizedAccessException) { }
     }
 }
+
+internal sealed class FakeHardwareInfoProvider : IHardwareInfoProvider
+{
+    public SystemInfo Info { get; set; } = new()
+    {
+        OsName = "Windows 11 Pro", OsDisplayVersion = "23H2", OsBuild = 22631, ComputerName = "GEHEIMER-PC", CpuName = "Test-CPU 9000", CpuCores = 8, CpuLogicalProcessors = 16,
+        MemoryTotalBytes = 16L << 30,
+        Gpus = new[] { new GpuInfo { Name = "Test-GPU", Vendor = "NVIDIA", IsIntegrated = false, DedicatedMemoryBytes = 8L << 30 } },
+        Volumes = new[] { new VolumeInfo { Letter = "C:", TotalBytes = 500L << 30, FreeBytes = 200L << 30, MediaType = DriveMediaType.Nvme, IsSystem = true } },
+        NetworkAdapters = new[] { new NetworkAdapterInfo { Id = "{1}", Name = "Ethernet", Type = "Ethernet", IsUp = true, IPv4 = new[] { "192.168.178.23" }, MacAddress = "AA-BB-CC-DD-EE-FF" } },
+    };
+    public bool IsProcessElevated => false;
+    public Task<SystemInfo> GetSystemInfoAsync(bool forceRefresh = false, CancellationToken cancellationToken = default) => Task.FromResult(Info);
+}
+
+internal sealed class FakeSecretStore : NexusOptimizer.Core.Settings.ISecretStore
+{
+    private readonly Dictionary<string, string> _values = new();
+    public void Set(string name, string? secret) { if (secret is null) _values.Remove(name); else _values[name] = secret; }
+    public string? Get(string name) => _values.GetValueOrDefault(name);
+    public bool Has(string name) => _values.ContainsKey(name);
+}
