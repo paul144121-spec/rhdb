@@ -242,12 +242,13 @@ public sealed class BenchmarkRunner
             new Random(1234 + index).NextBytes(buffer);
             Span<byte> hash = stackalloc byte[32];
             long local = 0;
-            while (stopwatch.Elapsed < duration && !cancellationToken.IsCancellationRequested)
+            // Mindestens ein Durchlauf – auch wenn der Thread unter hoher Systemlast erst spät startet.
+            do
             {
                 SHA256.HashData(buffer, hash);
                 buffer[0] = hash[0]; // verhindert, dass der Lauf wegoptimiert wird
                 local += BufferSize;
-            }
+            } while (stopwatch.Elapsed < duration && !cancellationToken.IsCancellationRequested);
             Interlocked.Add(ref totalBytes, local);
         }) { IsBackground = true }).ToList();
 
@@ -280,13 +281,13 @@ public sealed class BenchmarkRunner
     {
         var deviations = new List<double>(4096);
         var total = Stopwatch.StartNew();
-        while (total.Elapsed < duration && !cancellationToken.IsCancellationRequested)
+        do
         {
             var start = Stopwatch.GetTimestamp();
             Thread.Sleep(1);
             var elapsedMs = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
             deviations.Add(Math.Max(0, elapsedMs - 1.0));
-        }
+        } while (total.Elapsed < duration && !cancellationToken.IsCancellationRequested);
         deviations.Sort();
         return Statistics.Percentile(deviations, 99);
     }

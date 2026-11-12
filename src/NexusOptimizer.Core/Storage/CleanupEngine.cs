@@ -66,7 +66,7 @@ public static class CleanupCategories
             Description = "Inhalte von C:\\Windows\\Temp, die älter als 24 Stunden sind.",
             Safeguards = "Dateien der letzten 24 Stunden und gesperrte Dateien bleiben erhalten." },
         new CleanupCategory { Id = SystemCrashDumps, Name = "Systemabsturzabbilder", Privilege = PrivilegeLevel.Administrator,
-            Description = "Speicherabbilder von Bluescreens (Minidump-Ordner und MEMORY.DMP).",
+            Description = "Speicherabbilder von Bluescreens und Treiberfehlern (Ordner Minidump und LiveKernelReports). Die Datei MEMORY.DMP wird nicht angetastet.",
             Safeguards = "Wenn Sie einen Bluescreen noch analysieren (lassen) möchten, wählen Sie diese Kategorie ab." },
         new CleanupCategory { Id = SystemErrorReports, Name = "Fehlerberichte des Systems", Privilege = PrivilegeLevel.Administrator, SelectedByDefault = true,
             Description = "Systemweit archivierte und wartende Windows-Fehlerberichte.", Safeguards = "Betrifft nur Berichte, keine Anwendungsdaten." },

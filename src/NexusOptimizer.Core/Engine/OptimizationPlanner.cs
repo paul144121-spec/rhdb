@@ -142,14 +142,25 @@ public sealed class OptimizationPlanner
             return null;
         }
 
-        var support = await action.IsSupportedAsync(context, request.Parameters, cancellationToken).ConfigureAwait(false);
-        if (!support.IsSupported)
+        SupportResult support;
+        RiskAssessment risk;
+        try
         {
-            rejected.Add(new RejectedItem(metadata.Id, metadata.Name, RejectionKind.Unsupported, support.Reason));
+            support = await action.IsSupportedAsync(context, request.Parameters, cancellationToken).ConfigureAwait(false);
+            if (!support.IsSupported)
+            {
+                rejected.Add(new RejectedItem(metadata.Id, metadata.Name, RejectionKind.Unsupported, support.Reason));
+                return null;
+            }
+            risk = action.EvaluateRisk(request.Parameters, context);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // Eine Aktion, deren Voraussetzungen sich nicht prüfen lassen, wird nie ausgeführt.
+            rejected.Add(new RejectedItem(metadata.Id, metadata.Name, RejectionKind.StateUnavailable, "Die Kompatibilität konnte nicht geprüft werden: " + ex.Message));
             return null;
         }
 
-        var risk = action.EvaluateRisk(request.Parameters, context);
         var decision = policy.Evaluate(metadata, risk.Level, source);
         if (!decision.Allowed)
         {
