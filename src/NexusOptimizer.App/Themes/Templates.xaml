@@ -1,0 +1,400 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:NexusOptimizer.App.Controls"
+                    xmlns:conv="clr-namespace:NexusOptimizer.App.Converters"
+                    xmlns:s="clr-namespace:NexusOptimizer.App.Services"
+                    xmlns:vm="clr-namespace:NexusOptimizer.App.ViewModels">
+
+    <conv:VisibilityConverter x:Key="Vis" />
+    <conv:InverseBoolConverter x:Key="Not" />
+    <conv:EqualsConverter x:Key="Eq" />
+    <conv:PercentWidthConverter x:Key="PercentWidth" />
+    <conv:IsNullConverter x:Key="IsNull" />
+    <conv:BytesConverter x:Key="Bytes" />
+
+    <!-- Risikokennzeichnung: Content = RiskLevel -->
+    <DataTemplate x:Key="RiskBadge">
+        <Border x:Name="Root" Style="{StaticResource Badge}" Background="{DynamicResource Brush.GreenSoft}">
+            <TextBlock x:Name="Label" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Green}" Text="Risiko: sehr niedrig" />
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="Low">
+                <Setter TargetName="Label" Property="Text" Value="Risiko: niedrig" />
+                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.BlueSoft}" />
+                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource Brush.Blue}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="Moderate">
+                <Setter TargetName="Label" Property="Text" Value="Risiko: mittel" />
+                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.AmberSoft}" />
+                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource Brush.Amber}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="High">
+                <Setter TargetName="Label" Property="Text" Value="Risiko: hoch" />
+                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.RedSoft}" />
+                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource Brush.Red}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="Critical">
+                <Setter TargetName="Label" Property="Text" Value="Risiko: kritisch" />
+                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.RedSoft}" />
+                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource Brush.Red}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- Schlüssel-Wert-Zeile -->
+    <DataTemplate DataType="{x:Type vm:InfoRow}">
+        <Grid Margin="0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="210" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding Label}" Style="{StaticResource Text.Secondary}" TextWrapping="NoWrap" />
+            <TextBlock x:Name="Value" Grid.Column="1" Text="{Binding Value}" Style="{StaticResource Text.Body}" ToolTip="{Binding Hint}" />
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasHint}" Value="True">
+                <Setter TargetName="Value" Property="Foreground" Value="{DynamicResource Brush.TextTertiary}" />
+                <Setter TargetName="Value" Property="FontStyle" Value="Italic" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:InfoSection}">
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource Text.CardTitle}" Margin="0,0,0,8" />
+                <ItemsControl ItemsSource="{Binding Rows}" Focusable="False" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- Live-Kachel -->
+    <DataTemplate DataType="{x:Type vm:MetricTileViewModel}">
+        <Border Style="{StaticResource Card}" Margin="0,0,12,12" MinWidth="230" ToolTip="{Binding UnavailableReason}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="54" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource Text.Secondary}" />
+                <TextBlock x:Name="Value" Grid.Row="1" Text="{Binding Value}" Style="{StaticResource Text.Metric}" Margin="0,2,0,0" />
+                <TextBlock Grid.Row="2" Text="{Binding Detail}" Style="{StaticResource Text.Caption}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="30" />
+                <c:LineChart x:Name="Chart" Grid.Row="3" Margin="0,8,0,0" Values="{Binding History}" SecondaryValues="{Binding SecondaryHistory}" Maximum="{Binding Maximum}" Capacity="120"
+                             Stroke="{DynamicResource Brush.Accent}" SecondaryStroke="{DynamicResource Brush.Green}" GridBrush="{DynamicResource Brush.ChartGrid}" />
+            </Grid>
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding AccentKey}" Value="Brush.Cyan">
+                <Setter TargetName="Chart" Property="Stroke" Value="{DynamicResource Brush.Cyan}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AccentKey}" Value="Brush.Green">
+                <Setter TargetName="Chart" Property="Stroke" Value="{DynamicResource Brush.Green}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AccentKey}" Value="Brush.Amber">
+                <Setter TargetName="Chart" Property="Stroke" Value="{DynamicResource Brush.Amber}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AccentKey}" Value="Brush.Blue">
+                <Setter TargetName="Chart" Property="Stroke" Value="{DynamicResource Brush.Blue}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AccentKey}" Value="Brush.Red">
+                <Setter TargetName="Chart" Property="Stroke" Value="{DynamicResource Brush.Red}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsAvailable}" Value="False">
+                <Setter TargetName="Value" Property="Foreground" Value="{DynamicResource Brush.TextTertiary}" />
+                <Setter TargetName="Value" Property="FontSize" Value="17" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- Empfehlung -->
+    <DataTemplate DataType="{x:Type vm:RecommendationViewModel}">
+        <Border x:Name="Root" Style="{StaticResource Card}" Visibility="{Binding IsDismissed, Converter={StaticResource Vis}, ConverterParameter=invert}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Stripe" CornerRadius="2" Background="{DynamicResource Brush.Blue}" />
+                <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Border x:Name="Tag" Style="{StaticResource Badge}" Background="{DynamicResource Brush.BlueSoft}" Margin="0,0,8,0">
+                            <TextBlock x:Name="TagText" Text="{Binding SeverityText}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Blue}" />
+                        </Border>
+                        <TextBlock Text="{Binding Title}" Style="{StaticResource Text.CardTitle}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding Explanation}" Style="{StaticResource Text.Secondary}" Margin="0,8,0,0" />
+                    <ItemsControl ItemsSource="{Binding Evidence}" Margin="0,8,0,0" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat='• {0}'}" Style="{StaticResource Text.Caption}" Margin="0,1" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button Content="{Binding ActionText}" Command="{Binding ApplyCommand}" Style="{StaticResource Button.Accent}" Margin="0,0,8,0" Visibility="{Binding HasActions, Converter={StaticResource Vis}}" />
+                        <Button Content="Zur passenden Seite" Command="{Binding OpenCommand}" Margin="0,0,8,0" Visibility="{Binding HasPage, Converter={StaticResource Vis}}" />
+                        <Button Content="Nicht mehr vorschlagen" Command="{Binding DeclineCommand}" Style="{StaticResource Button.Subtle}" Visibility="{Binding HasActions, Converter={StaticResource Vis}}"
+                                ToolTip="Merkt sich Ihre Ablehnung. Die betroffenen Änderungen werden nicht erneut empfohlen." />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Severity}" Value="Critical">
+                <Setter TargetName="Stripe" Property="Background" Value="{DynamicResource Brush.Red}" />
+                <Setter TargetName="Tag" Property="Background" Value="{DynamicResource Brush.RedSoft}" />
+                <Setter TargetName="TagText" Property="Foreground" Value="{DynamicResource Brush.Red}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Severity}" Value="Warning">
+                <Setter TargetName="Stripe" Property="Background" Value="{DynamicResource Brush.Amber}" />
+                <Setter TargetName="Tag" Property="Background" Value="{DynamicResource Brush.AmberSoft}" />
+                <Setter TargetName="TagText" Property="Foreground" Value="{DynamicResource Brush.Amber}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Severity}" Value="Suggestion">
+                <Setter TargetName="Stripe" Property="Background" Value="{DynamicResource Brush.Accent}" />
+                <Setter TargetName="Tag" Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+                <Setter TargetName="TagText" Property="Foreground" Value="{DynamicResource Brush.Text}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- Tweak-Karte -->
+    <DataTemplate DataType="{x:Type vm:TweakItemViewModel}">
+        <Border Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <WrapPanel>
+                        <TextBlock Text="{Binding Name}" Style="{StaticResource Text.CardTitle}" Margin="0,0,10,4" TextWrapping="Wrap" />
+                        <ContentControl Content="{Binding Risk}" ContentTemplate="{StaticResource RiskBadge}" Margin="0,0,6,4" Focusable="False" />
+                        <Border Style="{StaticResource Badge}" Margin="0,0,6,4" Visibility="{Binding RequiresAdmin, Converter={StaticResource Vis}}" ToolTip="Für diese Änderung fragt Windows nach Administratorrechten (UAC).">
+                            <TextBlock Text="Administrator" FontSize="11" Foreground="{DynamicResource Brush.TextSecondary}" />
+                        </Border>
+                        <Border Style="{StaticResource Badge}" Background="{DynamicResource Brush.RedSoft}" Margin="0,0,6,4" Visibility="{Binding IsExperimental, Converter={StaticResource Vis}}">
+                            <TextBlock Text="Experimentell" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Red}" />
+                        </Border>
+                        <Border Style="{StaticResource Badge}" Background="{DynamicResource Brush.GreenSoft}" Margin="0,0,6,4" Visibility="{Binding IsApplied, Converter={StaticResource Vis}}">
+                            <TextBlock Text="Zielzustand aktiv" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Green}" />
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding Description}" Style="{StaticResource Text.Secondary}" Margin="0,2,0,0" />
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <TextBlock Text="Aktueller Zustand: " Style="{StaticResource Text.Caption}" />
+                        <TextBlock Text="{Binding CurrentValue}" FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Text}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding Note}" Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Amber}" Margin="0,3,0,0" Visibility="{Binding Note, Converter={StaticResource Vis}}" />
+                    <Expander Header="Wirkung, Nebenwirkungen und technische Details" Margin="0,8,0,0">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Text.Secondary}"><Run FontWeight="SemiBold" Text="Mögliche Vorteile: " /><Run Text="{Binding ExpectedEffect, Mode=OneWay}" /></TextBlock>
+                            <TextBlock Style="{StaticResource Text.Secondary}" Margin="0,4,0,0"><Run FontWeight="SemiBold" Text="Mögliche Nachteile: " /><Run Text="{Binding SideEffects, Mode=OneWay}" /></TextBlock>
+                            <TextBlock Style="{StaticResource Text.Secondary}" Margin="0,4,0,0" Visibility="{Binding RestartText, Converter={StaticResource Vis}}"><Run FontWeight="SemiBold" Text="Wirksam nach: " /><Run Text="{Binding RestartText, Mode=OneWay}" /></TextBlock>
+                            <Border Style="{StaticResource Card.Inset}" Margin="0,8,0,0">
+                                <TextBlock Text="{Binding Details}" Style="{StaticResource Text.Mono}" />
+                            </Border>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Top" MinWidth="130">
+                    <Button Content="Anwenden" Command="{Binding ApplyCommand}" IsEnabled="{Binding CanApply}" Style="{StaticResource Button.Accent}" ToolTip="Zeigt zuerst eine Vorschau der Änderung." />
+                    <Button Content="Rückgängig" Command="{Binding UndoCommand}" IsEnabled="{Binding CanUndo}" Margin="0,6,0,0" ToolTip="Stellt den zuvor gesicherten Zustand wieder her." />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!-- Geführter manueller Ablauf -->
+    <DataTemplate DataType="{x:Type vm:GuidedWorkflowViewModel}">
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource Text.CardTitle}" />
+                <TextBlock Text="{Binding Summary}" Style="{StaticResource Text.Secondary}" Margin="0,6,0,0" />
+                <ItemsControl ItemsSource="{Binding Steps}" Margin="0,8,0,0" Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Style="{StaticResource Text.Body}" Margin="0,2" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Border Style="{StaticResource Card.Inset}" Background="{DynamicResource Brush.AmberSoft}" Margin="0,10,0,0">
+                    <TextBlock Text="{Binding Warning}" FontSize="12.5" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Amber}" />
+                </Border>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- ───────── Dialoge ───────── -->
+    <DataTemplate DataType="{x:Type s:ConfirmDialogViewModel}">
+        <StackPanel Width="520">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource Text.PageTitle}" FontSize="19" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Message}" Style="{StaticResource Text.Body}" Margin="0,12,0,0" />
+            <Border Style="{StaticResource Card.Inset}" Margin="0,12,0,0" Visibility="{Binding Details, Converter={StaticResource Vis}}">
+                <TextBlock Text="{Binding Details}" Style="{StaticResource Text.Secondary}" />
+            </Border>
+            <CheckBox Content="{Binding Acknowledgement}" IsChecked="{Binding IsAcknowledged}" Margin="0,16,0,0" Visibility="{Binding HasAcknowledgement, Converter={StaticResource Vis}}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                <Button Content="{Binding CancelText}" Command="{Binding CancelCommand}" IsCancel="True" Margin="0,0,8,0" />
+                <Button x:Name="Confirm" Content="{Binding ConfirmText}" Command="{Binding ConfirmCommand}" IsDefault="True" Style="{StaticResource Button.Accent}" />
+            </StackPanel>
+        </StackPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsDanger}" Value="True">
+                <Setter TargetName="Confirm" Property="Background" Value="{DynamicResource Brush.Red}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type s:MessageDialogViewModel}">
+        <StackPanel Width="560">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource Text.PageTitle}" FontSize="19" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Message}" Style="{StaticResource Text.Body}" Margin="0,12,0,0" />
+            <Border Style="{StaticResource Card.Inset}" Margin="0,12,0,0" Visibility="{Binding HasDetails, Converter={StaticResource Vis}}">
+                <ScrollViewer MaxHeight="280" VerticalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding Details}" Style="{StaticResource Text.Mono}" />
+                </ScrollViewer>
+            </Border>
+            <Button Content="Schließen" Command="{Binding CloseCommand}" IsDefault="True" IsCancel="True" HorizontalAlignment="Right" Margin="0,22,0,0" Style="{StaticResource Button.Accent}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type s:PromptDialogViewModel}">
+        <StackPanel Width="460">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource Text.PageTitle}" FontSize="19" />
+            <TextBlock Text="{Binding Message}" Style="{StaticResource Text.Secondary}" Margin="0,10,0,0" />
+            <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" Margin="0,12,0,0" MaxLength="120" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                <Button Content="Abbrechen" Command="{Binding CancelCommand}" IsCancel="True" Margin="0,0,8,0" />
+                <Button Content="{Binding ConfirmText}" Command="{Binding ConfirmCommand}" IsDefault="True" Style="{StaticResource Button.Accent}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type s:ProgressDialogViewModel}">
+        <StackPanel Width="560">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource Text.PageTitle}" FontSize="19" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Status}" Style="{StaticResource Text.Body}" Margin="0,12,0,8" />
+            <ProgressBar Value="{Binding Value}" Maximum="{Binding Maximum}" IsIndeterminate="{Binding IsIndeterminate}" />
+            <Border Style="{StaticResource Card.Inset}" Margin="0,12,0,0" Visibility="{Binding Lines.Count, Converter={StaticResource Vis}}">
+                <ScrollViewer MaxHeight="220" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Lines}" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Style="{StaticResource Text.Mono}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+            <TextBlock Text="Ein begonnener Schritt wird immer bis zur Verifikation zu Ende geführt." Style="{StaticResource Text.Caption}" Margin="0,10,0,0" />
+            <Button Content="Nach diesem Schritt abbrechen" Command="{Binding CancelCommand}" HorizontalAlignment="Right" Margin="0,12,0,0"
+                    Visibility="{Binding CanCancel, Converter={StaticResource Vis}}" IsEnabled="{Binding CancelRequested, Converter={StaticResource Not}}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type s:PlanStepViewModel}">
+        <Border Background="{DynamicResource Brush.Input}" CornerRadius="{StaticResource Radius.Control}" Padding="12,10" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Top" ToolTip="Diese Änderung ausführen" />
+                <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                    <WrapPanel>
+                        <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Text}" Margin="0,0,10,4" TextWrapping="Wrap" />
+                        <ContentControl Content="{Binding Risk}" ContentTemplate="{StaticResource RiskBadge}" Margin="0,0,6,4" Focusable="False" />
+                        <Border Style="{StaticResource Badge}" Margin="0,0,6,4" Visibility="{Binding RequiresAdmin, Converter={StaticResource Vis}}">
+                            <TextBlock Text="Administrator" FontSize="11" Foreground="{DynamicResource Brush.TextSecondary}" />
+                        </Border>
+                    </WrapPanel>
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Aktueller Zustand:" Style="{StaticResource Text.Caption}" Margin="0,0,10,2" />
+                        <TextBlock Grid.Column="1" Text="{Binding CurrentValue}" FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource Brush.TextSecondary}" />
+                        <TextBlock Grid.Row="1" Text="Neuer Zustand:" Style="{StaticResource Text.Caption}" Margin="0,0,10,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NewValue}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}" />
+                    </Grid>
+                    <TextBlock Text="{Binding SideEffects}" Style="{StaticResource Text.Caption}" Margin="0,6,0,0" Visibility="{Binding HasSideEffects, Converter={StaticResource Vis}}" />
+                    <TextBlock Text="{Binding Note}" Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Amber}" Margin="0,4,0,0" Visibility="{Binding Note, Converter={StaticResource Vis}}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <TextBlock Text="{Binding ReversibleText}" Style="{StaticResource Text.Caption}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding RestartText, StringFormat='  ·  {0}'}" Style="{StaticResource Text.Caption}" Visibility="{Binding RestartText, Converter={StaticResource Vis}}" />
+                    </StackPanel>
+                    <TextBlock Text="Diese Änderung erfordert Ihre ausdrückliche Auswahl – sie ist nicht vorausgewählt." Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Red}" Margin="0,4,0,0"
+                               Visibility="{Binding RequiresIndividualConfirmation, Converter={StaticResource Vis}}" />
+                    <Expander Header="Technische Details" Margin="0,6,0,0">
+                        <TextBlock Text="{Binding Details}" Style="{StaticResource Text.Mono}" />
+                    </Expander>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type s:PlanPreviewDialogViewModel}">
+        <Grid Width="720" MaxHeight="640">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource Text.PageTitle}" FontSize="19" TextWrapping="Wrap" />
+                <TextBlock Text="Vorschau: Es wurde noch nichts verändert. Prüfen Sie die geplanten Änderungen und wählen Sie ab, was nicht ausgeführt werden soll." Style="{StaticResource Text.Secondary}" Margin="0,8,0,10" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button Content="Alle auswählen" Command="{Binding SelectAllCommand}" Style="{StaticResource Button.Link}" Margin="0,0,14,0" />
+                    <Button Content="Keine auswählen" Command="{Binding SelectNoneCommand}" Style="{StaticResource Button.Link}" />
+                </StackPanel>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,-8,0" Padding="0,0,8,0">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Steps}" Focusable="False" />
+                    <ItemsControl ItemsSource="{Binding Notes}" Focusable="False" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat='Hinweis: {0}'}" Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Amber}" Margin="0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Text="{Binding AlreadyAppliedText}" Style="{StaticResource Text.Caption}" Margin="0,6,0,0" Visibility="{Binding HasAlreadyApplied, Converter={StaticResource Vis}}" />
+                    <Expander Header="Nicht ausführbare Einträge" Margin="0,8,0,0" Visibility="{Binding HasRejected, Converter={StaticResource Vis}}">
+                        <ItemsControl ItemsSource="{Binding Rejected}" Focusable="False">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding StringFormat='• {0}'}" Style="{StaticResource Text.Caption}" Margin="0,2" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Expander>
+                </StackPanel>
+            </ScrollViewer>
+            <StackPanel Grid.Row="2" Margin="0,12,0,0">
+                <CheckBox IsChecked="{Binding CreateRestorePoint}" Visibility="{Binding OfferRestorePoint, Converter={StaticResource Vis}}" Margin="0,0,0,8">
+                    <TextBlock Text="Vorher einen Windows-Wiederherstellungspunkt anfordern (zusätzlich zur eigenen Sicherung; erfordert Administratorrechte)" TextWrapping="Wrap" FontSize="12.5" />
+                </CheckBox>
+                <TextBlock Text="Für mindestens eine Änderung fragt Windows im nächsten Schritt nach Administratorrechten (Benutzerkontensteuerung)." Style="{StaticResource Text.Caption}"
+                           Visibility="{Binding RequiresElevation, Converter={StaticResource Vis}}" />
+                <TextBlock Text="Achtung: Mindestens eine ausgewählte Änderung kann nicht automatisch rückgängig gemacht werden." Style="{StaticResource Text.Caption}" Foreground="{DynamicResource Brush.Red}"
+                           Visibility="{Binding HasIrreversible, Converter={StaticResource Vis}}" />
+                <TextBlock Text="{Binding RestartText, StringFormat='Wirksam nach: {0}'}" Style="{StaticResource Text.Caption}" Visibility="{Binding RestartText, Converter={StaticResource Vis}}" />
+                <Grid Margin="0,12,0,0">
+                    <TextBlock Text="{Binding Summary}" Style="{StaticResource Text.Secondary}" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Abbrechen" Command="{Binding CancelCommand}" IsCancel="True" Margin="0,0,8,0" />
+                        <Button Content="{Binding ConfirmText}" Command="{Binding ConfirmCommand}" Style="{StaticResource Button.Accent}" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

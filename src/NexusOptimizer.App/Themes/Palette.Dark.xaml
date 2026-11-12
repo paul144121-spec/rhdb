@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="Color.Window">#0E0F14</Color>
+    <SolidColorBrush x:Key="Brush.Window" Color="#0E0F14" />
+    <Color x:Key="Color.Sidebar">#12131A</Color>
+    <SolidColorBrush x:Key="Brush.Sidebar" Color="#12131A" />
+    <Color x:Key="Color.Card">#181A23</Color>
+    <SolidColorBrush x:Key="Brush.Card" Color="#181A23" />
+    <Color x:Key="Color.CardHover">#1F2230</Color>
+    <SolidColorBrush x:Key="Brush.CardHover" Color="#1F2230" />
+    <Color x:Key="Color.Input">#1C1E29</Color>
+    <SolidColorBrush x:Key="Brush.Input" Color="#1C1E29" />
+    <Color x:Key="Color.Border">#2A2D3A</Color>
+    <SolidColorBrush x:Key="Brush.Border" Color="#2A2D3A" />
+    <Color x:Key="Color.BorderStrong">#3D4155</Color>
+    <SolidColorBrush x:Key="Brush.BorderStrong" Color="#3D4155" />
+    <Color x:Key="Color.Text">#F2F3F7</Color>
+    <SolidColorBrush x:Key="Brush.Text" Color="#F2F3F7" />
+    <Color x:Key="Color.TextSecondary">#A4A9BB</Color>
+    <SolidColorBrush x:Key="Brush.TextSecondary" Color="#A4A9BB" />
+    <Color x:Key="Color.TextTertiary">#70758A</Color>
+    <SolidColorBrush x:Key="Brush.TextTertiary" Color="#70758A" />
+    <Color x:Key="Color.OnAccent">#FFFFFF</Color>
+    <SolidColorBrush x:Key="Brush.OnAccent" Color="#FFFFFF" />
+    <Color x:Key="Color.Accent">#7C5CFF</Color>
+    <SolidColorBrush x:Key="Brush.Accent" Color="#7C5CFF" />
+    <Color x:Key="Color.AccentHover">#917AFF</Color>
+    <SolidColorBrush x:Key="Brush.AccentHover" Color="#917AFF" />
+    <Color x:Key="Color.AccentPressed">#6A4AE8</Color>
+    <SolidColorBrush x:Key="Brush.AccentPressed" Color="#6A4AE8" />
+    <Color x:Key="Color.AccentSoft">#2B2552</Color>
+    <SolidColorBrush x:Key="Brush.AccentSoft" Color="#2B2552" />
+    <Color x:Key="Color.Cyan">#22D3EE</Color>
+    <SolidColorBrush x:Key="Brush.Cyan" Color="#22D3EE" />
+    <Color x:Key="Color.Green">#34D399</Color>
+    <SolidColorBrush x:Key="Brush.Green" Color="#34D399" />
+    <Color x:Key="Color.Amber">#FBBF24</Color>
+    <SolidColorBrush x:Key="Brush.Amber" Color="#FBBF24" />
+    <Color x:Key="Color.Red">#F87171</Color>
+    <SolidColorBrush x:Key="Brush.Red" Color="#F87171" />
+    <Color x:Key="Color.Blue">#60A5FA</Color>
+    <SolidColorBrush x:Key="Brush.Blue" Color="#60A5FA" />
+    <Color x:Key="Color.GreenSoft">#12332A</Color>
+    <SolidColorBrush x:Key="Brush.GreenSoft" Color="#12332A" />
+    <Color x:Key="Color.AmberSoft">#3A2F12</Color>
+    <SolidColorBrush x:Key="Brush.AmberSoft" Color="#3A2F12" />
+    <Color x:Key="Color.RedSoft">#3A1C1F</Color>
+    <SolidColorBrush x:Key="Brush.RedSoft" Color="#3A1C1F" />
+    <Color x:Key="Color.BlueSoft">#17293F</Color>
+    <SolidColorBrush x:Key="Brush.BlueSoft" Color="#17293F" />
+    <Color x:Key="Color.Overlay">#B3000000</Color>
+    <SolidColorBrush x:Key="Brush.Overlay" Color="#B3000000" />
+    <Color x:Key="Color.Track">#262937</Color>
+    <SolidColorBrush x:Key="Brush.Track" Color="#262937" />
+    <Color x:Key="Color.ChartGrid">#232635</Color>
+    <SolidColorBrush x:Key="Brush.ChartGrid" Color="#232635" />
+</ResourceDictionary>
