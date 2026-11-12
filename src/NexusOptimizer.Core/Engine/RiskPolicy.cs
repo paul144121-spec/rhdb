@@ -61,6 +61,6 @@ public sealed record RiskPolicy
             return PermissionDecision.Deny($"Die Risikostufe „{risk.ToGerman()}“ übersteigt Ihre freigegebene Stufe „{MaxInteractiveRisk.ToGerman()}“.");
 
         // Hohe Risiken und nicht umkehrbare Aktionen verlangen eine gesonderte Bestätigung je Aktion.
-        return PermissionDecision.Allow(individualConfirmation: risk >= RiskLevel.High || !metadata.IsReversible);
+        return PermissionDecision.Allow(individualConfirmation: risk >= RiskLevel.High || (!metadata.IsReversible && !metadata.IsDiagnosticOnly));
     }
 }

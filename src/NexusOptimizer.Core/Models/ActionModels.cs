@@ -117,6 +117,8 @@ public sealed record ActionMetadata
     public PrivilegeLevel RequiredPrivilege { get; init; } = PrivilegeLevel.User;
     public RestartRequirement Restart { get; init; } = RestartRequirement.None;
     public bool IsReversible { get; init; } = true;
+    /// <summary>Reine Prüfung/Wartung ohne bleibende Konfigurationsänderung (z. B. DISM CheckHealth). Benötigt keine Sicherung.</summary>
+    public bool IsDiagnosticOnly { get; init; }
     /// <summary>Experimentelle Aktionen werden nie automatisch und nur nach ausdrücklicher Freischaltung ausgeführt.</summary>
     public bool IsExperimental { get; init; }
     public WindowsVersionRange SupportedVersions { get; init; } = WindowsVersionRange.All;
