@@ -11,6 +11,8 @@
                 <ResourceDictionary Source="Themes/Templates.xaml" />
                 <ResourceDictionary Source="Themes/Shell.xaml" />
                 <ResourceDictionary Source="Views/Pages.Overview.xaml" />
+                <ResourceDictionary Source="Views/Pages.Hardware.xaml" />
+                <ResourceDictionary Source="Views/Pages.System.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

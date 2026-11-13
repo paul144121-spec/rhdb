@@ -26,7 +26,7 @@
                                 <TextBlock Text="{Binding Title}" Style="{StaticResource Text.PageTitle}" />
                                 <TextBlock Text="{Binding Subtitle}" Style="{StaticResource Text.PageSubtitle}" Visibility="{Binding Subtitle, Converter={StaticResource Vis}}" />
                             </StackPanel>
-                            <ContentPresenter Grid.Column="1" Content="{TemplateBinding HeaderContent}" VerticalAlignment="Center" Margin="16,0,0,0" />
+                            <ContentPresenter Grid.Column="1" Content="{TemplateBinding HeaderContent}" ContentTemplate="{TemplateBinding HeaderContentTemplate}" VerticalAlignment="Center" Margin="16,0,0,0" />
                         </Grid>
                         <StackPanel Grid.Row="1" Margin="32,0,32,0">
                             <ProgressBar IsIndeterminate="True" Height="3" Margin="0,0,0,8" Visibility="{Binding IsLoading, Converter={StaticResource Vis}}" />
@@ -181,5 +181,84 @@
             <c:Icon Data="{Binding Icon}" Width="17" Height="17" Margin="0,0,11,0" />
             <TextBlock Text="{Binding Title}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
         </DockPanel>
+    </DataTemplate>
+    <!-- Auswählbare Karte (Tag = True: ausgewählt) -->
+    <Style x:Key="Button.Card" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root" Background="{DynamicResource Brush.Card}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1" CornerRadius="{StaticResource Radius.Card}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.CardHover}" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Accent}" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+                        </DataTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.55" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Beschriftung über einem Eingabefeld -->
+    <Style x:Key="Text.Label" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextSecondary}" />
+        <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+
+    <!-- Schritt eines Ablaufs -->
+    <DataTemplate DataType="{x:Type vm:WorkflowStepViewModel}">
+        <DockPanel Margin="0,0,14,10" ToolTip="{Binding Description}">
+            <Border x:Name="Dot" Width="24" Height="24" CornerRadius="12" Background="{DynamicResource Brush.Track}" VerticalAlignment="Top" Margin="0,0,10,0">
+                <Grid>
+                    <TextBlock x:Name="Number" Text="{Binding Number}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <c:Icon x:Name="Glyph" Data="{StaticResource Icon.Check}" Width="12" Height="12" Foreground="{DynamicResource Brush.Green}" Visibility="Collapsed" />
+                </Grid>
+            </Border>
+            <StackPanel>
+                <TextBlock x:Name="Title" Text="{Binding Title}" FontSize="12.5" Foreground="{DynamicResource Brush.TextSecondary}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Note}" Style="{StaticResource Text.Caption}" Visibility="{Binding Note, Converter={StaticResource Vis}}" />
+            </StackPanel>
+        </DockPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding State}" Value="active">
+                <Setter TargetName="Dot" Property="Background" Value="{DynamicResource Brush.Accent}" />
+                <Setter TargetName="Number" Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+                <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource Brush.Text}" />
+                <Setter TargetName="Title" Property="FontWeight" Value="SemiBold" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding State}" Value="done">
+                <Setter TargetName="Dot" Property="Background" Value="{DynamicResource Brush.GreenSoft}" />
+                <Setter TargetName="Number" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="Glyph" Property="Visibility" Value="Visible" />
+                <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource Brush.Text}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding State}" Value="failed">
+                <Setter TargetName="Dot" Property="Background" Value="{DynamicResource Brush.RedSoft}" />
+                <Setter TargetName="Number" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="Glyph" Property="Visibility" Value="Visible" />
+                <Setter TargetName="Glyph" Property="Data" Value="{StaticResource Icon.Warning}" />
+                <Setter TargetName="Glyph" Property="Foreground" Value="{DynamicResource Brush.Red}" />
+                <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource Brush.Red}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding State}" Value="skipped">
+                <Setter TargetName="Dot" Property="Opacity" Value="0.5" />
+                <Setter TargetName="Title" Property="Foreground" Value="{DynamicResource Brush.TextTertiary}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 </ResourceDictionary>

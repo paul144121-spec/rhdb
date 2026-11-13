@@ -45,10 +45,10 @@
     <DataTemplate DataType="{x:Type vm:InfoRow}">
         <Grid Margin="0,4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="210" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="5*" MaxWidth="290" />
+                <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="{Binding Label}" Style="{StaticResource Text.Secondary}" TextWrapping="NoWrap" />
+            <TextBlock Text="{Binding Label}" Style="{StaticResource Text.Secondary}" TextWrapping="Wrap" Margin="0,0,12,0" />
             <TextBlock x:Name="Value" Grid.Column="1" Text="{Binding Value}" Style="{StaticResource Text.Body}" ToolTip="{Binding Hint}" />
         </Grid>
         <DataTemplate.Triggers>

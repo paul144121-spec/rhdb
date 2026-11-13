@@ -336,6 +336,25 @@ public static class PageHelpers
         }
     }
 
+    /// <summary>Zeigt eine vorhandene Datei oder einen Ordner im Windows-Explorer an.</summary>
+    public static bool ShowInExplorer(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !System.IO.Path.IsPathFullyQualified(path)) return false;
+        try
+        {
+            var start = new System.Diagnostics.ProcessStartInfo(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe")) { UseShellExecute = false };
+            if (System.IO.File.Exists(path)) start.ArgumentList.Add("/select," + path);
+            else if (System.IO.Directory.Exists(path)) start.ArgumentList.Add(path);
+            else return false;
+            System.Diagnostics.Process.Start(start)?.Dispose();
+            return true;
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or PlatformNotSupportedException)
+        {
+            return false;
+        }
+    }
+
     public static async Task RefreshTweaksAsync(IEnumerable<TweakItemViewModel> tweaks, SystemContext context, CancellationToken cancellationToken = default)
     {
         foreach (var tweak in tweaks.ToList())

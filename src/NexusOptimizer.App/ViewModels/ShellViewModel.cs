@@ -27,6 +27,21 @@ public static class PageRegistry
     public static IReadOnlyList<NavItem> All { get; } = new NavItem[]
     {
         new("dashboard", "Dashboard", "Dashboard", Overview, typeof(DashboardViewModel), "übersicht start status zustand"),
+        new("oneclick", "Ein-Klick-Optimierung", "Bolt", Overview, typeof(OneClickViewModel), "jetzt optimieren modus sicher ausgewogen maximale leistung"),
+        new("ai", "KI-Optimierer", "Sparkle", Overview, typeof(AiOptimizerViewModel), "empfehlungen analyse automatik ziel lernmodus"),
+        new("monitor", "Systemmonitor", "Pulse", Overview, typeof(MonitorViewModel), "live messwerte diagramm historie warnung temperatur auslastung"),
+        new("cpu", "Prozessor", "Cpu", Hardware, typeof(CpuViewModel), "cpu kerne takt turbo core parking leistungszustand"),
+        new("gpu", "Grafik", "Gpu", Hardware, typeof(GpuViewModel), "gpu grafikkarte vram treiber grafikspeicher"),
+        new("ram", "Arbeitsspeicher", "Ram", Hardware, typeof(RamViewModel), "ram speicher auslagerungsdatei pagefile module"),
+        new("storage", "Datenträger", "Drive", Hardware, typeof(StorageViewModel), "ssd festplatte laufwerk trim defragmentieren duplikate große dateien smart"),
+        new("network", "Netzwerk", "Globe", Hardware, typeof(NetworkViewModel), "dns ping latenz adapter winsock traceroute"),
+        new("power", "Energieverwaltung", "Battery", Hardware, typeof(PowerViewModel), "energieplan energiesparplan akku höchstleistung standby"),
+        new("startup", "Autostart", "Play", System, typeof(StartupViewModel), "autostart programme anmeldung start"),
+        new("processes", "Prozesse", "List", System, typeof(ProcessesViewModel), "task manager beenden priorität pid"),
+        new("services", "Windows-Dienste", "Gear", System, typeof(ServicesViewModel), "dienste starttyp service"),
+        new("registry", "Registry-Tweaks", "Tree", System, typeof(RegistryViewModel), "registrierung tweaks einstellungen explorer spielmodus"),
+        new("privacy", "Datenschutz", "Shield", System, typeof(PrivacyViewModel), "datenschutz werbe-id telemetrie sicherheit defender"),
+        new("advanced", "Expertenlabor", "Flask", System, typeof(AdvancedViewModel), "experimentell experten mythen"),
     };
 
     public static NavItem? Find(string key) => All.FirstOrDefault(p => p.Key == key);

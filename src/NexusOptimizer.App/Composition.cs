@@ -154,6 +154,7 @@ public static class Composition
         services.AddSingleton<AutoPilot>();
         services.AddSingleton<AppRuntime>();
         services.AddSingleton<ShellViewModel>();
+        services.AddSingleton<HardwareServices>();
         foreach (var page in PageRegistry.All) services.AddSingleton(page.PageType);
 
         return services.BuildServiceProvider();

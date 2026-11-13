@@ -322,6 +322,13 @@ public sealed class PageLayout : ContentControl
 {
     public static readonly DependencyProperty HeaderContentProperty = DependencyProperty.Register(nameof(HeaderContent), typeof(object), typeof(PageLayout), new PropertyMetadata(null));
     public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable), typeof(bool), typeof(PageLayout), new PropertyMetadata(true));
+    public static readonly DependencyProperty HeaderContentTemplateProperty = DependencyProperty.Register(nameof(HeaderContentTemplate), typeof(DataTemplate), typeof(PageLayout), new PropertyMetadata(null));
+
+    public DataTemplate? HeaderContentTemplate
+    {
+        get => (DataTemplate?)GetValue(HeaderContentTemplateProperty);
+        set => SetValue(HeaderContentTemplateProperty, value);
+    }
 
     /// <summary>Inhalt rechts neben dem Seitentitel (z. B. Schaltflächen).</summary>
     public object? HeaderContent
