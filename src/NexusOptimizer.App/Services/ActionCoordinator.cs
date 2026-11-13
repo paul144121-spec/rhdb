@@ -51,6 +51,8 @@ public sealed class ActionCoordinator
     /// <summary>Wird nach jeder Ausführung oder Wiederherstellung ausgelöst, damit Seiten ihre Zustände neu lesen.</summary>
     public event EventHandler? SystemChanged;
 
+    public Task<SystemContext> GetContextAsync(CancellationToken cancellationToken = default) => _snapshots.GetContextAsync(cancellationToken);
+
     public async Task<OptimizationPlan> BuildPlanAsync(IEnumerable<PlanRequest> requests, ExecutionSource source, CancellationToken cancellationToken = default)
     {
         var context = await _snapshots.GetContextAsync(cancellationToken).ConfigureAwait(true);

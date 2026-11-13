@@ -42,6 +42,17 @@ public static class PageRegistry
         new("registry", "Registry-Tweaks", "Tree", System, typeof(RegistryViewModel), "registrierung tweaks einstellungen explorer spielmodus"),
         new("privacy", "Datenschutz", "Shield", System, typeof(PrivacyViewModel), "datenschutz werbe-id telemetrie sicherheit defender"),
         new("advanced", "Expertenlabor", "Flask", System, typeof(AdvancedViewModel), "experimentell experten mythen"),
+        new("gaming", "Gaming-Boost", "Gamepad", Maintenance, typeof(GamingViewModel), "spiele steam epic profil fps spielmodus"),
+        new("cleanup", "Windows-Bereinigung", "Trash", Maintenance, typeof(CleanupViewModel), "temporäre dateien cache papierkorb aufräumen speicherplatz"),
+        new("diagnostics", "Systemdiagnose", "Diagnose", Maintenance, typeof(DiagnosticsViewModel), "fehler ereignisprotokoll abstürze geräte befunde"),
+        new("repair", "Windows-Reparatur", "Wrench", Maintenance, typeof(RepairViewModel), "sfc dism chkdsk reparieren wiederherstellungspunkt"),
+        new("benchmark", "Benchmark-Center", "Stopwatch", Maintenance, typeof(BenchmarkViewModel), "benchmark messen vergleich leistungstest"),
+        new("profiles", "Optimierungsprofile", "Layers", Management, typeof(ProfilesViewModel), "profil spiel büro akku leise streaming"),
+        new("automation", "Automatisierungscenter", "Cycle", Management, typeof(AutomationViewModel), "regeln automatik wenn dann zeitplan"),
+        new("backup", "Sicherung & Wiederherstellung", "Archive", Management, typeof(BackupViewModel), "backup wiederherstellen rollback wiederherstellungspunkt"),
+        new("history", "Optimierungsverlauf", "History", Management, typeof(HistoryViewModel), "verlauf protokoll rückgängig änderungen journal"),
+        new("chat", "KI-Assistent", "Chat", Management, typeof(ChatViewModel), "chat fragen assistent hilfe erklärung"),
+        new("settings", "Einstellungen", "Gear", Management, typeof(SettingsViewModel), "einstellungen design datenschutz api schlüssel ki ollama claude"),
     };
 
     public static NavItem? Find(string key) => All.FirstOrDefault(p => p.Key == key);

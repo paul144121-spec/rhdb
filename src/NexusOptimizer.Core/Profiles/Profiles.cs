@@ -347,6 +347,13 @@ public sealed class ProfileManager
         return new ProfileActivationResult(batch.FailedCount == 0, Append(summary, note), plan, batch, restored);
     }
 
+    /// <summary>Vermerkt ein Profil als aktiv, nachdem seine Änderungen über den Bestätigungsablauf der Oberfläche ausgeführt wurden.</summary>
+    public void MarkActive(string profileId, string? batchId)
+    {
+        _store.SetActive(profileId, batchId);
+        ActiveProfileChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>„Profil zurücksetzen“: nimmt alle Änderungen des aktiven Profils zurück.</summary>
     public async Task<IReadOnlyList<RollbackOutcome>> ResetActiveAsync()
     {
