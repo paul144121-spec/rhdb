@@ -12,7 +12,7 @@ namespace NexusOptimizer.Windows.Tests;
 /// </summary>
 public sealed class WindowsRegistryStoreTests : IDisposable
 {
-    private const string Root = @"Software\NexusOptimizerAI.Tests";
+    private static readonly string Root = @"Software\NexusOptimizerAI.Tests." + Guid.NewGuid().ToString("N");
     private readonly string _key = Root + @"\" + Guid.NewGuid().ToString("N");
     private readonly WindowsRegistryStore _store = new();
 

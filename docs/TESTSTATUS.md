@@ -11,9 +11,9 @@ Stand: Entwicklung ausschließlich auf Linux. **Kein Test auf echtem Windows, ke
 
 Wine-Messwerte (z. B. „nicht verfügbar“ bei GPU/Datenträger) sind Wine-Eigenheiten und sagen nichts über echtes Windows.
 
+| GitHub Actions auf windows-latest: Build Release (inkl. WPF, Elevated), 366 Core-Tests, Windows-Tests (Registry, Pipe, SQLite, DPAPI, Dienste, Hardware, Messwerte) | Erster Lauf: 406 von 407 grün; der eine Fehlschlag war eine Testverwechslung (zwei Klassen löschten denselben Registry-Ordner parallel) und ist behoben – Bestätigung durch erneuten Lauf steht aus |
+
 ## Kompiliert, aber nicht ausgeführt
-- `NexusOptimizer.Windows.Tests` (Integrationstests mit Wegwerf-Schlüsseln) – nie gelaufen.
-- GitHub-Actions-Workflow – nie gelaufen (Push war blockiert).
 - Administratorkomponente inkl. UAC-Start und Pipe-Authentifizierung.
 - PDH-Zähler, WMI-Abfragen, NVML, Energie-API (`powrprof`), SCM-Änderungen, Systemwiederherstellung, SFC/DISM/CHKDSK-Läufe, Bereinigung echter Ordner, DNS-Änderung, Autostart-Umschalten auf echtem System.
 - Anthropic-/Ollama-/OpenAI-Anbieter: nur Kompilierung und Tests mit Fake-HTTP; **kein echter Aufruf**.
