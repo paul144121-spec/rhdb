@@ -505,4 +505,23 @@
             </StackPanel>
         </c:PageLayout>
     </DataTemplate>
+
+    <!-- ───────── Hardware-Übersicht ───────── -->
+    <DataTemplate DataType="{x:Type vm:HardwareOverviewViewModel}">
+        <c:PageLayout>
+            <c:PageLayout.HeaderContent>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Bericht speichern" Command="{Binding ExportCommand}" Margin="0,0,8,0" />
+                    <Button Content="Neu erkennen" Command="{Binding RescanHardwareCommand}" />
+                </StackPanel>
+            </c:PageLayout.HeaderContent>
+            <StackPanel>
+                <Border Style="{StaticResource Card.Note}" Margin="0,0,0,12">
+                    <TextBlock FontSize="12.5" TextWrapping="Wrap" Foreground="{DynamicResource Brush.Text}"
+                               Text="Alle Angaben stammen von Windows (WMI, Firmware, Treiber). Was Windows nicht meldet, steht als „nicht verfügbar“ da – es wird nichts geschätzt. Seriennummern werden nicht angezeigt." />
+                </Border>
+                <ItemsControl ItemsSource="{Binding Sections}" Style="{StaticResource Items.Sections}" />
+            </StackPanel>
+        </c:PageLayout>
+    </DataTemplate>
 </ResourceDictionary>

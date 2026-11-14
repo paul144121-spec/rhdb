@@ -178,7 +178,10 @@
     <!-- Navigationseintrag -->
     <DataTemplate DataType="{x:Type vm:NavItem}">
         <DockPanel>
-            <c:Icon Data="{Binding Icon}" Width="17" Height="17" Margin="0,0,11,0" />
+            <Grid Width="17" Height="17" Margin="0,0,11,0">
+                <c:Icon Data="{Binding Icon}" Width="17" Height="17" Visibility="{Binding HasImage, Converter={StaticResource Vis}, ConverterParameter=invert}" />
+                <Image Source="{Binding Image}" Width="17" Height="17" RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding HasImage, Converter={StaticResource Vis}}" />
+            </Grid>
             <TextBlock Text="{Binding Title}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
         </DockPanel>
     </DataTemplate>

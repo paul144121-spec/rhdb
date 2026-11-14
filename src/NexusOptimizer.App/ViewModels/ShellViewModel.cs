@@ -17,6 +17,10 @@ namespace NexusOptimizer.App.ViewModels;
 public sealed record NavItem(string Key, string Title, string IconKey, string Group, Type PageType, string Keywords = "")
 {
     public Geometry? Icon => Application.Current?.TryFindResource("Icon." + IconKey) as Geometry;
+    /// <summary>Optionales Bildsymbol (statt des Strichsymbols), z. B. „hardware“.</summary>
+    public System.Windows.Media.ImageSource? Image => IconKey == "hardware"
+        ? new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/NexusOptimizer.App;component/Assets/hardware.png", UriKind.Absolute)) : null;
+    public bool HasImage => IconKey == "hardware";
 }
 
 /// <summary>Alle Bereiche der Anwendung in Navigationsreihenfolge.</summary>
@@ -30,6 +34,7 @@ public static class PageRegistry
         new("oneclick", "Ein-Klick-Optimierung", "Bolt", Overview, typeof(OneClickViewModel), "jetzt optimieren modus sicher ausgewogen maximale leistung"),
         new("ai", "KI-Optimierer", "Sparkle", Overview, typeof(AiOptimizerViewModel), "empfehlungen analyse automatik ziel lernmodus"),
         new("monitor", "Systemmonitor", "Pulse", Overview, typeof(MonitorViewModel), "live messwerte diagramm historie warnung temperatur auslastung"),
+        new("hardware", "Hardware-Übersicht", "hardware", Hardware, typeof(HardwareOverviewViewModel), "alle hardware übersicht gesamt komponenten system mainboard bios modelle seriennummer"),
         new("cpu", "Prozessor", "Cpu", Hardware, typeof(CpuViewModel), "cpu kerne takt turbo core parking leistungszustand"),
         new("gpu", "Grafik", "Gpu", Hardware, typeof(GpuViewModel), "gpu grafikkarte vram treiber grafikspeicher"),
         new("ram", "Arbeitsspeicher", "Ram", Hardware, typeof(RamViewModel), "ram speicher auslagerungsdatei pagefile module"),
