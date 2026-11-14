@@ -25,6 +25,5 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\nexus.ico" />
-    <Resource Include="Assets\hardware.png" />
   </ItemGroup>
 </Project>
